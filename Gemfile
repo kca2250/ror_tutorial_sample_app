@@ -5,6 +5,7 @@ ruby '2.7.3'
 
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 gem 'puma', '~> 5.0'
+gem 'bootstrap-sass', '~> 3.4.1'
 gem 'sass-rails', '>= 6'
 gem 'webpacker', '~> 5.0'
 gem 'turbolinks', '~> 5'
