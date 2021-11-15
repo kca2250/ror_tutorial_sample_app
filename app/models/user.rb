@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  attr_accessor :remember_token, :activation_token
+  attr_accessor :remember_token, :activation_token, :reset_token
 
   # 保存する前にemailを小文字にする
   before_save { email.downcase! } # self.email = email.downcase と同じ
-
   # ユーザー作成前にactivation_digestを作成する
   before_create :create_activation_digest
 
   # ユーザネーム
   validates :name, presence: true, length: { maximum: 50 }
-
   # ユーザーメールアドレス
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
   validates :email, presence: true, length: { maximum: 255 },
@@ -56,6 +54,23 @@ class User < ApplicationRecord
   # ユーザーのログイン情報を消す
   def forget
     update_attribute(:remember_digest, nil)
+  end
+
+  # パスワード再設定用の属性を設定する
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest, User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
+  end
+
+  # パスワード再設定用のメールを送信する
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  # パスワード再設定の期限が切れている場合はtrueを返す
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
   end
 
   private
