@@ -4,6 +4,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.3'
 
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
+gem 'image_processing'
+gem 'mini_magick'
+gem 'active_storage_validations'
 gem 'bcrypt', '~> 3.1.7'
 gem 'puma', '~> 5.0'
 gem 'faker', '2.1.2'
